@@ -471,7 +471,8 @@ function togglePause() {
 }
 
 function toggleUndo() {
-    importGameData()
+    const save = localStorage.getItem("gameDataSave")
+    loadGameData(save)
 }
 
 function forceAutobuy() {
