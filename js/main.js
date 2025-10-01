@@ -6,16 +6,42 @@ onerror = () => {
     }, 30 * 1000)
 }
 
-//window.addEventListener('load', function () {
-    document.body.addEventListener("click", function (evt) {
-        if(evt.target.id !== 'undoButton') {
-            saveUndoData()
+document.querySelectorAll('.w3-button.button')
+    .forEach(element => element.addEventListener("click", function (evt) {
+        console.log(evt.target)
+
+        const buttonsToSkip = [
+            'undoButton',
+            'pauseButton'
+        ]
+
+        if (buttonsToSkip.includes(evt.target.id)) {
+            console.log('skip')
+            return
         }
-    });
-//});
+        
+        settingsTab = document.getElementById("settingsPage")
+
+        if(settingsTab.contains(element)) {
+            
+            const settingsToInclude = [
+                'importSave',
+                'hardReset'
+            ]
+
+            if( ! settingsToInclude.includes(evt.target.id)) {
+                return
+            }
+
+        }
+
+        console.log('save')
+        saveUndoData()
+    })
+);
 
 
-window.addEventListener('resize', function(event) {
+window.addEventListener('resize', function (event) {
     onResize(event.target.outerWidth)
 }, true);
 
@@ -107,8 +133,7 @@ function addMultipliers() {
     }
 }
 
-function getHeroXpGainMultipliers(job)
-{
+function getHeroXpGainMultipliers(job) {
     var baseMult = 1
 
     if (job instanceof Job)
@@ -160,7 +185,7 @@ function getHeroXpGainMultipliers(job)
 function setCustomEffects() {
     const bargaining = gameData.taskData["Bargaining"]
     bargaining.getEffect = function () {
-        const multiplier = 1 - getBaseLog(bargaining.isHero? 3 : 7, bargaining.level + 1) / 10
+        const multiplier = 1 - getBaseLog(bargaining.isHero ? 3 : 7, bargaining.level + 1) / 10
         if (multiplier < 0.1) return 0.1
         return multiplier
     }
@@ -194,7 +219,7 @@ function setCustomEffects() {
     }
 
     const timeWarping = gameData.taskData["Time Warping"]
-    timeWarping.getEffect = function() {
+    timeWarping.getEffect = function () {
         return 1 + getBaseLog(timeWarping.isHero ? 1.005 : 10, timeWarping.level + 1)
     }
 
@@ -204,7 +229,7 @@ function setCustomEffects() {
     }
 
     const unholyRecall = gameData.taskData["Cosmic Recollection"];
-    unholyRecall.getEffect = function() {
+    unholyRecall.getEffect = function () {
         return unholyRecall.level * (unholyRecall.isHero ? 0.065 : 0.00065);
     }
 
@@ -219,12 +244,12 @@ function setCustomEffects() {
     const faintHope = milestoneData["Faint Hope"]
     faintHope.getEffect = function () {
         var mult = 1
-        if (gameData.requirements["A New Hope"].isCompleted()) { 
+        if (gameData.requirements["A New Hope"].isCompleted()) {
             mult = softcap(1e308, 10000000, 0.01)
         }
         else if (gameData.requirements["Speed speed speed"].isCompleted()) {
             mult = 7.5275 * Math.exp(0.0053 * (gameData.requirements["Strong Hope"].isCompleted() ? gameData.rebirthFiveTime
-                : gameData.rebirthThreeTime)) * (Math.log(getUnpausedGameSpeed()) / Math.log(2))            
+                : gameData.rebirthThreeTime)) * (Math.log(getUnpausedGameSpeed()) / Math.log(2))
             if (mult == Infinity)
                 mult = 1e308
             mult = softcap(mult, 10000000, 0.01)
@@ -234,7 +259,7 @@ function setCustomEffects() {
             if (kickin < 0.15)
                 kickin = 0.15
 
-            mult = 1 + ((gameData.rebirthThreeTime * (gameData.requirements["Angry Heroes"].isCompleted() ? 10 : 1)) / (7750 * kickin)) * (Math.log(getUnpausedGameSpeed()) / Math.log(2))            
+            mult = 1 + ((gameData.rebirthThreeTime * (gameData.requirements["Angry Heroes"].isCompleted() ? 10 : 1)) / (7750 * kickin)) * (Math.log(getUnpausedGameSpeed()) / Math.log(2))
             mult = softcap(mult, 200)
         }
 
@@ -345,10 +370,10 @@ function getEvilGain() {
 
     const evilControl = gameData.taskData["Evil Control"]
     const bloodMeditation = gameData.taskData["Blood Meditation"]
-    const absoluteWish = gameData.taskData ["Absolute Wish"]
-    const oblivionEmbodiment = gameData.taskData ["Void Embodiment"]
+    const absoluteWish = gameData.taskData["Absolute Wish"]
+    const oblivionEmbodiment = gameData.taskData["Void Embodiment"]
     const yingYang = gameData.taskData["Yin Yang"]
-    const inferno = gameData.requirements["Inferno"].isCompleted() ? 5 : 1    
+    const inferno = gameData.requirements["Inferno"].isCompleted() ? 5 : 1
     const theDevilInsideYou = gameData.requirements["The Devil inside you"].isCompleted() ? 1e15 : 1
     const stairWayToHell = getBindedItemEffect("Highway to hell")
     const evilBooster = (gameData.perks.evil_booster == 1) ? 1e50 : 1
@@ -371,8 +396,8 @@ function getEssenceGain() {
 
     return essenceControl.getEffect() * essenceCollector.getEffect() * transcendentMaster.getEffect()
         * faintHope.getEffect() * rise.getEffect() * getChallengeBonus("dance_with_the_devil")
-        * getAGiftFromGodEssenceGain() * darkMagician.getEffect() * getDarkMatterSkillEssence() 
-        * theNewGold * lifeIsValueable *  essenceMultGain()
+        * getAGiftFromGodEssenceGain() * darkMagician.getEffect() * getDarkMatterSkillEssence()
+        * theNewGold * lifeIsValueable * essenceMultGain()
 }
 
 function getDarkMatterGain() {
@@ -381,7 +406,7 @@ function getDarkMatterGain() {
     const darkMatterMining = gameData.requirements["Dark Matter Mining"].isCompleted() ? 3 : 1
     const darkMatterMillionaire = gameData.requirements["Dark Matter Millionaire"].isCompleted() ? 500 : 1
     const Desintegration = gameData.itemData['Desintegration'].getEffect()
-    const TheEndIsNear = getUnspentPerksDarkmatterGainBuff() 
+    const TheEndIsNear = getUnspentPerksDarkmatterGainBuff()
 
 
     return 1 * darkRuler.getEffect() * darkMatterHarvester * darkMatterMining * darkMatterMillionaire * getChallengeBonus("the_darkest_time") * getDarkMatterSkillDarkMater() * darkMatterMultGain() *
@@ -421,7 +446,7 @@ function getUnpausedGameSpeed() {
 
     const timeWarpingSpeed = boostWarping * timeWarping.getEffect() * temporalDimension.getEffect() * timeLoop.getEffect() * warpDrive * speedSpeedSpeed * timeIsAFlatCircle
 
-    const gameSpeed = baseGameSpeed * timeWarpingSpeed * getChallengeBonus("time_does_not_fly") * getGottaBeFastGain() * getDarkMatterSkillTimeWarping() 
+    const gameSpeed = baseGameSpeed * timeWarpingSpeed * getChallengeBonus("time_does_not_fly") * getGottaBeFastGain() * getDarkMatterSkillTimeWarping()
 
     if (gameData.active_challenge == "time_does_not_fly" || gameData.active_challenge == "the_darkest_time")
         return Math.pow(gameSpeed, 0.7)
@@ -481,7 +506,7 @@ function togglePause() {
 
 function toggleUndo() {
     const data = JSON.parse(localStorage.getItem("gameUndoSave"))
-    loadData(data)
+    reloadGameData(data)
 }
 
 function forceAutobuy() {
@@ -520,7 +545,7 @@ function createGameObject(data, entity) {
     if ("income" in entity) { data[entity.name] = new Job(entity) }
     else if ("maxXp" in entity) { data[entity.name] = new Skill(entity) }
     else if ("tier" in entity) { data[entity.name] = new Milestone(entity) }
-    else {data[entity.name] = new Item(entity)}
+    else { data[entity.name] = new Item(entity) }
     data[entity.name].id = "row " + entity.name
 }
 
@@ -541,7 +566,7 @@ function getNet() {
 function getIncome() {
     if (gameData.active_challenge == "the_darkest_time")
         return 0
-    
+
     return gameData.currentJob.getIncome() * getDarkMatterSkillIncome()
 }
 
@@ -642,7 +667,7 @@ function autoBuy() {
                 }
             }
         }
-    }   
+    }
 }
 
 function increaseDays() {
@@ -675,12 +700,12 @@ function increaseRealtime() {
     else {
         gameData.boost_cooldown -= realDiff
 
-        if (gameData.boost_cooldown < 0) 
+        if (gameData.boost_cooldown < 0)
             gameData.boost_cooldown = 0
     }
 }
 
-function setTheme(index, reload=false) {
+function setTheme(index, reload = false) {
     const body = document.getElementById("body")
 
     body.classList.remove("dark")
@@ -694,7 +719,7 @@ function setTheme(index, reload=false) {
         // dark
         body.classList.add("dark")
     }
-    else if (index == 2){
+    else if (index == 2) {
         // colorblind Tritanopia
         body.classList.add("colorblind")
     }
@@ -713,13 +738,13 @@ function setEnableKeybinds(enableKeybinds) {
     selectElementInGroup("EnableKeybinds", enableKeybinds ? 0 : 1)
 }
 
-function resetEvilPerks(){
+function resetEvilPerks() {
     if (gameData.requirements["God's Blessings"].isCompleted())
         return;
     gameData.evil_perks_points = 0
     gameData.evil_perks.receive_essence = 0
-    
-    if (!gameData.evil_perks_keep){
+
+    if (!gameData.evil_perks_keep) {
         gameData.evil_perks.reduce_eye_requirement = 0
         gameData.evil_perks.reduce_evil_requirement = 0
         gameData.evil_perks.reduce_the_void_requirement = 0
@@ -803,7 +828,7 @@ function rebirthFour() {
     gameData.evil_perks_points = 0
     gameData.evil_perks.receive_essence = 0
 
-    if (gameData.metaverse.challenge_altar == 0 && gameData.perks.save_challenges == 0)  {
+    if (gameData.metaverse.challenge_altar == 0 && gameData.perks.save_challenges == 0) {
         for (const challenge in gameData.challenges) {
             gameData.challenges[challenge] = 0
         }
@@ -846,7 +871,7 @@ function rebirthFive() {
     gameData.dark_matter_shop.a_gift_from_god = 0
     gameData.dark_matter_shop.gotta_be_fast = 0
     gameData.dark_matter_shop.life_coach = 0
-    
+
 
     if (gameData.perks.keep_dark_mater_skills == 0) {
         gameData.dark_matter_shop.speed_is_life = 0
@@ -888,7 +913,7 @@ function rebirthFive() {
     gameData.metaverse.evil_tran_gain = 0
     gameData.metaverse.essence_gain_modifier = 0
     gameData.metaverse.challenge_altar = 0
-    gameData.metaverse.dark_mater_gain_modifer = 0    
+    gameData.metaverse.dark_mater_gain_modifer = 0
 
     rebirthReset()
 
@@ -902,7 +927,7 @@ function rebirthFive() {
 
 function applyMilestones() {
     if (((gameData.requirements["Magic Eye"].isCompleted()) && (gameData.requirements["Rebirth note 2"].isCompleted())) ||
-        (gameData.requirements["Almighty Eye"].isCompleted())){
+        (gameData.requirements["Almighty Eye"].isCompleted())) {
         for (taskName in gameData.taskData) {
             const task = gameData.taskData[taskName]
             const effect = gameData.taskData["Cosmic Recollection"].getEffect()
@@ -949,8 +974,8 @@ function rebirthReset(set_tab_to_jobs = true) {
             || gameData.settings.selectedTab == Tab.MILESTONES && gameData.essence > 0
             || gameData.settings.selectedTab == Tab.DARK_MATTER && gameData.dark_matter > 0
             || gameData.settings.selectedTab == Tab.REBIRTH
-            || gameData.settings.selectedTab == Tab.EVILPERKS 
-            || gameData.settings.selectedTab == Tab.INFO 
+            || gameData.settings.selectedTab == Tab.EVILPERKS
+            || gameData.settings.selectedTab == Tab.INFO
         ) {
             // do not switch tab
         }
@@ -979,7 +1004,7 @@ function rebirthReset(set_tab_to_jobs = true) {
         task.xp = 0
         task.xpBigInt = BigInt(0)
         task.isHero = false
-        task.isFinished =false
+        task.isFinished = false
     }
 
     for (const itemName in gameData.itemData) {
@@ -1023,15 +1048,15 @@ function isAlive() {
     const condition = gameData.days < getLifespan() || getLifespan() == Infinity
 
     if (!condition) {
-        gameData.days = getLifespan()        
+        gameData.days = getLifespan()
     }
 
-    if (!in_offline_progress){
+    if (!in_offline_progress) {
         const deathText = document.getElementById("deathText")
-        if (!condition)  
-            deathText.classList.remove("hidden")        
-        else 
-            deathText.classList.add("hidden")        
+        if (!condition)
+            deathText.classList.remove("hidden")
+        else
+            deathText.classList.add("hidden")
     }
     return condition && !tempData.hasError
 }
@@ -1065,7 +1090,7 @@ function makeHeroes() {
         const prev = getPreviousTaskInCategory(taskname)
 
         if (prev != "" && (!gameData.taskData[prev].isHero || gameData.taskData[prev].level < 20))
-                continue
+            continue
 
         const req = gameData.requirements[taskname]
         let isNewHero = true
@@ -1150,7 +1175,7 @@ function assignMethods() {
         } else if (requirement.type == "perkpoint") {
             requirement = Object.assign(new PerkPointRequirement(requirement.querySelectors, requirement.requirements), requirement)
         }
-        
+
 
         const tempRequirement = tempData["requirements"][key]
         requirement.elements = tempRequirement.elements
@@ -1230,7 +1255,7 @@ function loadGameData() {
 
             // remove milestoneData from gameData
             if ("milestoneData" in gameDataSave) {
-                delete gameDataSave["milestoneData"]                
+                delete gameDataSave["milestoneData"]
             }
 
             replaceSaveDict(gameData, gameDataSave)
@@ -1291,7 +1316,7 @@ function loadGameData() {
 
             // Remove invalid active misc items
             gameData.currentMisc = gameData.currentMisc.filter((element) => element instanceof Item)
-            
+
         }
     } catch (error) {
         console.error(error)
@@ -1305,27 +1330,27 @@ function loadGameData() {
 var intervalID = 0;
 var totalTimes = 0;
 var executedTimes = 0;
-var in_offline_progress=false;
+var in_offline_progress = false;
 var lastUpdate = 0;
 
 function setIntervalX(callback, delay, repetitions) {
     var x = 0;
     intervalID = window.setInterval(function () {
 
-       callback();
+        callback();
 
-       if (++x >= repetitions) {
-           stopOffline()
-       }
+        if (++x >= repetitions) {
+            stopOffline()
+        }
     }, delay);
 }
 
-function calc_offline_progress(ms){
-    if (ms > 10000){
+function calc_offline_progress(ms) {
+    if (ms > 10000) {
         in_offline_progress = true
         intervalID = 0
         totalTimes = 0
-        executedTimes = 0        
+        executedTimes = 0
         var offline_max_time = 3600 * 1000 // 1 hour
         if (ms > offline_max_time)
             ms = offline_max_time
@@ -1334,21 +1359,21 @@ function calc_offline_progress(ms){
         var times = totalTimes / updates_in_one_tick
         document.getElementById("offline_progress").hidden = false
         document.getElementById("mainarea").hidden = true
-        setIntervalX(() => update_times(updates_in_one_tick), 20, times)        
+        setIntervalX(() => update_times(updates_in_one_tick), 20, times)
     }
 }
 
-function update_times(times){
+function update_times(times) {
     for (var i = 0; i < times; i++) {
         update(false)
         executedTimes++
-        document.getElementById("offline_time").textContent = Math.floor(executedTimes*100/totalTimes) + "%"
+        document.getElementById("offline_time").textContent = Math.floor(executedTimes * 100 / totalTimes) + "%"
         if (!isAlive())
             stopOffline()
-    }   
+    }
 }
 
-function stopOffline(){
+function stopOffline() {
     window.clearInterval(intervalID);
     document.getElementById("offline_progress").hidden = true
     document.getElementById("mainarea").hidden = false
@@ -1421,7 +1446,7 @@ function applyEvilPerks() {
 
     gameData.requirements["Rebirth note 3"].requirements[0].requirement = getEvilRequirement()
     gameData.requirements["Rebirth button 2"].requirements[0].requirement = getEvilRequirement()
-    gameData.requirements["Rebirth stats evil"].requirements[0].requirement = getEvilRequirement()    
+    gameData.requirements["Rebirth stats evil"].requirements[0].requirement = getEvilRequirement()
     gameData.requirements["key2"].requirements[0].requirement = getEvilRequirement()
 
     gameData.requirements["Rebirth note 4"].requirements[0].requirement = getVoidRequirement()
@@ -1481,13 +1506,13 @@ function importGameData() {
             return
         }
         const data = JSON.parse(window.atob(importExportBox.value))
-        loadData(data)
+        reloadGameData(data)
     } catch (error) {
         alert("It looks like you tried to load a corrupted save... If this issue persists, feel free to contact the developers!")
     }
 }
 
-function loadData(data) {
+function reloadGameData(data) {
     clearInterval(gameloop)
     gameData = data
     saveGameData()
@@ -1509,7 +1534,7 @@ function exportGameData() {
 function copyTextToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
         const tooltip = document.getElementById("exportTooltip");
-        tooltip.innerHTML = "&nbsp;&nbsp;Save copied to clipboard!" ;
+        tooltip.innerHTML = "&nbsp;&nbsp;Save copied to clipboard!";
     }, err => {
         //console.error('Async: Could not copy text: ', err);
     })
@@ -1577,7 +1602,7 @@ setCustomEffects()
 addMultipliers()
 
 if ("save_date_time" in gameData && gameData.save_date_time > 0) {
-   calc_offline_progress(Date.now() - gameData.save_date_time);            
+    calc_offline_progress(Date.now() - gameData.save_date_time);
 }
 
 if (!in_offline_progress)
@@ -1593,7 +1618,7 @@ setTabMetaverse("metaverseTab1")
 
 let ticking = false;
 
-var gameloop = setInterval(function() {
+var gameloop = setInterval(function () {
     if (ticking) return;
     ticking = true;
     update();

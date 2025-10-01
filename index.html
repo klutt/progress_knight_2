@@ -838,7 +838,7 @@
 										<ul>
 											<li>
 												<div class="text-caption">
-													<button class="w3-button button" onClick="importGameData()">Import save</button>
+													<button id="importSave" class="w3-button button" onClick="importGameData()">Import save</button>
 													<button class="w3-button button" onClick="exportGameData()" onmouseout="outExportButton()">Export save</button><span class="tooltiptext" id="exportTooltip"></span>
 													<form style="margin-top: 0.8em" autocomplete="off">
 														<input id="importExportBox" placeholder="Enter save here" type="text">
@@ -916,7 +916,7 @@
 											</li>
 											<li>
 												<div class="text-caption" style="margin-top: 0.4em;">
-													<button class="w3-button button w3-red" onClick="resetGameData()">Hard reset game</button>
+													<button id="hardReset" class="w3-button button w3-red" onClick="resetGameData()">Hard reset game</button>
 												</div>
 											</li>
 											<li>
