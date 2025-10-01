@@ -1,7 +1,10 @@
+0.02 251001
+* Fixed so that not all clicks triggers the undo save. It's supposed to only
+do this when clicking something crucial, like any reset and possibly buying
+stuff. 
+
 0.01 251001
-
 * Added undo button
-
 
 ------- Here is where I forked this version -------
 
