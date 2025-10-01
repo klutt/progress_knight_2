@@ -1465,6 +1465,7 @@ function loadGameData(data) {
 }
 
 document.body.addEventListener("click", function() {
+    console.log("Click detected")
     saveGameData()
 });
 
