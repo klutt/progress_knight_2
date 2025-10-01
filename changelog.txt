@@ -1,3 +1,10 @@
+0.01 251001
+
+* Added undo button
+
+
+------- Here is where I forked this version -------
+
 version 2.5.0 / 01.08.2024
 * Improved display on mobile devices
 * Added offline progress (up to 1 hour)

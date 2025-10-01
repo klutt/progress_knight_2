@@ -1,5 +1,4 @@
-# Progress Knight Quest
+# Progress Knight Quest klutt mod
 
-A continuation of Progress Knight 2.0. Contains 5 prestige layers with various unique mechanics.
+A mod of Progress Knight Quest. It started with my wish for an undo button. I have no long term goal for this.
 
-PRs which fix bugs are welcome :)
