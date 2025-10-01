@@ -470,6 +470,10 @@ function togglePause() {
     gameData.paused = !gameData.paused
 }
 
+function toggleUndo() {
+    importGameData()
+}
+
 function forceAutobuy() {
     autoBuyEnabled = true
 }
