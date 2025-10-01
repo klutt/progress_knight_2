@@ -6,6 +6,15 @@ onerror = () => {
     }, 30 * 1000)
 }
 
+//window.addEventListener('load', function () {
+    document.body.addEventListener("click", function (evt) {
+        if(evt.target.id !== 'undoButton') {
+            saveUndoData()
+        }
+    });
+//});
+
+
 window.addEventListener('resize', function(event) {
     onResize(event.target.outerWidth)
 }, true);
@@ -471,7 +480,8 @@ function togglePause() {
 }
 
 function toggleUndo() {
-    importGameData()
+    const data = JSON.parse(localStorage.getItem("gameUndoSave"))
+    loadData(data)
 }
 
 function forceAutobuy() {
@@ -1179,6 +1189,12 @@ function replaceSaveDict(dict, saveDict) {
     }
 }
 
+function saveUndoData() {
+    gameUndoData = gameData
+    gameUndoData.save_date_time = Date.now()
+    localStorage.setItem("gameUndoSave", JSON.stringify(gameUndoData))
+}
+
 function saveGameData() {
     gameData.save_date_time = Date.now()
     localStorage.setItem("gameDataSave", JSON.stringify(gameData))
@@ -1465,13 +1481,17 @@ function importGameData() {
             return
         }
         const data = JSON.parse(window.atob(importExportBox.value))
-        clearInterval(gameloop)
-        gameData = data
-        saveGameData()
-        location.reload()
+        loadData(data)
     } catch (error) {
         alert("It looks like you tried to load a corrupted save... If this issue persists, feel free to contact the developers!")
     }
+}
+
+function loadData(data) {
+    clearInterval(gameloop)
+    gameData = data
+    saveGameData()
+    location.reload()
 }
 
 function exportGameData() {
