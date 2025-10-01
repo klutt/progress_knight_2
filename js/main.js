@@ -1457,6 +1457,17 @@ function resetGameData() {
     location.reload()
 }
 
+function loadGameData(data) {
+    clearInterval(gameloop)
+    gameData = data
+    saveGameData()
+    location.reload()
+}
+
+document.body.addEventListener("click", function() {
+    saveGameData()
+});
+
 function importGameData() {
     try {
         const importExportBox = document.getElementById("importExportBox")
@@ -1465,10 +1476,7 @@ function importGameData() {
             return
         }
         const data = JSON.parse(window.atob(importExportBox.value))
-        clearInterval(gameloop)
-        gameData = data
-        saveGameData()
-        location.reload()
+	loadGameData(data)
     } catch (error) {
         alert("It looks like you tried to load a corrupted save... If this issue persists, feel free to contact the developers!")
     }
