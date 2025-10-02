@@ -1,3 +1,7 @@
+0.03 251002
+* Completely reworked how the undo button works. Now it simply goes back
+somewhere between 30 and 60 seconds in time. 
+
 0.02 251001
 * Fixed so that not all clicks triggers the undo save. It's supposed to only
 do this when clicking something crucial, like any reset and possibly buying

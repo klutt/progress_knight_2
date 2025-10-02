@@ -500,6 +500,18 @@ document.querySelector("#changelogTabTabButton").addEventListener('click', async
     }
 });
 
+function toggleUndo() {
+    try {
+        const data = JSON.parse(localStorage.getItem("undoGameData"))
+        clearInterval(gameloop)
+        gameData = data
+        saveGameData()
+        location.reload()
+    } catch (error) {
+        alert("Undo data is corrupt or does not exist.")
+    }
+}
+
 function togglePause() {
     gameData.paused = !gameData.paused
 }
@@ -1221,8 +1233,12 @@ function saveUndoData() {
 }
 
 function saveGameData() {
+    storeGameData("gameDataSave")
+}
+
+function storeGameData(name) {
     gameData.save_date_time = Date.now()
-    localStorage.setItem("gameDataSave", JSON.stringify(gameData))
+    localStorage.setItem(name, JSON.stringify(gameData))
 }
 
 function peekSettingFromSave(setting) {
@@ -1242,8 +1258,12 @@ function peekSettingFromSave(setting) {
 }
 
 function loadGameData() {
+    loadNamedGameData("gameDataSave")
+}
+
+function loadNamedGameData(name) {
     try {
-        const gameDataSave = JSON.parse(localStorage.getItem("gameDataSave"))
+        const gameDataSave = JSON.parse(localStorage.getItem(name))
 
         if (gameDataSave !== null) {
             // When the game contains completedTimes, add 1 Dark Matter and remove the instance.
@@ -1320,7 +1340,7 @@ function loadGameData() {
         }
     } catch (error) {
         console.error(error)
-        console.log(localStorage.getItem("gameDataSave"))
+        console.log(localStorage.getItem(name))
         alert("It looks like you tried to load a corrupted save... If this issue persists, feel free to contact the developers!")
     }
 
@@ -1635,6 +1655,14 @@ var gameloop = setInterval(function () {
     ticking = false;
 }, 1000 / updateSpeed)
 var saveloop = setInterval(saveGameData, 3000)
+
+var undoloop = setInterval(foo, 30000)
+
+function foo() {
+    storeGameData("undoGameData")
+
+    console.log('hihi')
+}
 
 /* FPS */
 /*
